@@ -1,0 +1,69 @@
+with dictionary
+-------------------
+
+from fastapi import FastAPI
+
+app= FastAPI()
+
+Gangs = [
+    {
+        "id": 1,
+        "fullname": "mahesh babu",
+        "city": "Banglore",
+        "age": 28,
+    },
+    {
+        "id": 2,
+        "fullname": "kunal sharma",
+        "city": "Pune",
+        "age": 22,
+    },
+    {
+        "id": 3,
+        "fullname": "roshan seth",
+        "city": "Chennai",
+        "age": 28,
+    },
+]
+
+@app.get("/")
+def index():
+    return "welcome to Gang.."
+
+@app.get("/gangs")
+def ganglist():
+    return Gangs
+
+
+@app.get("/gangs/{id}", status_code=200)
+def gangbyid(*, id: int) -> dict:
+    result = [gang for gang in Gangs if gang["id"] == id]
+    if result:
+        return result[0] 
+
+--------------------------------------------------
+
+
+ reading from a class as BaseModel  
+ --------------------------------
+
+from fastapi import FastAPI
+from fastapi.params import Body
+from pydantic import BaseModel
+
+app = FastAPI()
+
+class Post(BaseModel):
+    title: str
+    content: str
+    published: bool=True
+
+@app.get("/")
+def index():
+    return {"Hello": "World"}
+
+@app.post("/create")
+def create_posts(payload:Post):
+    print(payload.title)
+    return payload
+
